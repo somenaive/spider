@@ -4,8 +4,6 @@ import sys
 import io
 import ck
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf8')  # 改变标准输出的默认编码
-
 # 登录后才能访问的网页
 
 def getHtml(url):
@@ -35,11 +33,13 @@ def saveImg(imgSrc):
             f.write(requests.get(url).content)
 
 
-url = 'https://www.zhihu.com/topic/20022251/hot'
-html=getHtml(url)
-soup=BeautifulSoup(html,'html.parser')
-src=[]
-for im in soup.find_all('img'):
-    src.append(im.attrs['src'])
+if __name__=='__main__':
+    url = 'https://www.zhihu.com/topic/20022251/hot'
+    html = getHtml(url)
+    soup = BeautifulSoup(html, 'html.parser')
+    src = []
+    for im in soup.find_all('img'):
+        src.append(im.attrs['src'])
 
-saveImg(src)
+    saveImg(src)
+
