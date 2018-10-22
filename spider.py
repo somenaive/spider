@@ -1,4 +1,5 @@
 import requests
+from bs4 import BeautifulSoup
 import sys
 import io
 import ck
@@ -24,9 +25,21 @@ def getHtml(url):
     resp = requests.get(url, headers=headers, cookies=cookies)
     return resp.content.decode('utf-8')
 
-url = 'http://zhihu.com'
+def saveImg(imgSrc):
+    i=0
+    for url in imgSrc:
+        i+=1
+        path='./img/'+str(i)+'.jpg'
+        print(path)
+        with open(path, 'wb') as f:
+            f.write(requests.get(url).content)
 
 
-f=open('zh.txt','w',encoding='utf-8')
-f.write(getHtml(url))
-f.close()
+url = 'https://www.zhihu.com/topic/20022251/hot'
+html=getHtml(url)
+soup=BeautifulSoup(html,'html.parser')
+src=[]
+for im in soup.find_all('img'):
+    src.append(im.attrs['src'])
+
+saveImg(src)
